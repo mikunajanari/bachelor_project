@@ -184,7 +184,7 @@ ScriptedImporter:
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 9, y: 9, z: 9, w: 9}
     rect:
       serializedVersion: 2
       x: 100
@@ -204,7 +204,7 @@ ScriptedImporter:
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 9, y: 9, z: 9, w: 9}
     rect:
       serializedVersion: 2
       x: 180
@@ -224,7 +224,7 @@ ScriptedImporter:
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 9, y: 9, z: 9, w: 9}
     rect:
       serializedVersion: 2
       x: 260
@@ -364,7 +364,7 @@ ScriptedImporter:
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 8, y: 6, z: 8, w: 6}
     rect:
       serializedVersion: 2
       x: 180
@@ -684,7 +684,7 @@ ScriptedImporter:
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 9, y: 0, z: 9, w: 10}
     rect:
       serializedVersion: 2
       x: 180
