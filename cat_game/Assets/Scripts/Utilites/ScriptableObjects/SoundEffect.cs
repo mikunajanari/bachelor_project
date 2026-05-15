@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace cat_game
+namespace cats
 {
-    public class SoundEffect : MonoBehaviour
+    [CreateAssetMenu(fileName = "NewSoundEffect", menuName = "CoonGame/Audio/Sound Effect")]
+    public class SoundEffect : ScriptableObject
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        [SerializeField] private AudioClip _clip;
+        [SerializeField][Range(0, 1)] private float _volume = 1f;
+        [SerializeField][Range(-3, 3)] private float _pitch = 1f;
+        [SerializeField][Range(0, 0.5f)] private float _pitchRandomRange = 0.1f;
+        [SerializeField] private bool _randomPitch = false;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public AudioClip Clip => _clip;
+        public float Volume => _volume;
+        public float Pitch => _pitch;
+        public float RandomPitchRange => _pitchRandomRange;
+        public bool RandomPitch => _randomPitch;
     }
 }
