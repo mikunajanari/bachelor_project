@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 namespace cats.UI
 {
-    // Конкретная реализация UI представления
     public class CatUIView : MonoBehaviour, ICatUIView
     {
         [Header("Stat Bars")]
@@ -22,6 +21,70 @@ namespace cats.UI
         [SerializeField] private Sprite _neutralCatSprite;
         [SerializeField] private Sprite _sadCatSprite;
         [SerializeField] private Image _catSpriteImage;
+        
+        [Header("Drag & Drop")]
+        [SerializeField] private Sprite _dragHoverSprite;
+        [SerializeField] private GameObject _highlightOverlay;
+        
+        [Header("Feed")]
+        [SerializeField] private CatController _catController;
+        [SerializeField] private FeedingFeedback _feedback;
+
+        private Sprite _normalSprite;
+        private bool _isDragActive;
+        private bool _useTemporarySprite;
+        private Sprite _originalSprite;
+        private RectTransform _rect;
+
+        private void Awake()
+        {
+            _rect = GetComponent<RectTransform>();
+            
+            if (_catSpriteImage != null)
+                _normalSprite = _catSpriteImage.sprite;
+            
+            // Настраиваем зону для дропа
+            Image zoneImage = GetComponent<Image>();
+            if (zoneImage != null && zoneImage != _catSpriteImage)
+            {
+                zoneImage.color = Color.clear;
+                zoneImage.raycastTarget = true;
+            }
+            else if (_catSpriteImage != null)
+            {
+                _catSpriteImage.raycastTarget = true;
+            }
+        }
+
+        private void Start()
+        {
+            ShowNormalSprite();
+            SetHighlightVisuals(false);
+        }
+
+        private void OnEnable()
+        {
+            EventBus.Subscribe<DragStartedEvent>(OnDragStarted);
+            EventBus.Subscribe<DragEndedEvent>(OnDragEnded);
+        }
+
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<DragStartedEvent>(OnDragStarted);
+            EventBus.Unsubscribe<DragEndedEvent>(OnDragEnded);
+        }
+
+        private void OnDragStarted(DragStartedEvent _)
+        {
+            _isDragActive = true;
+        }
+
+        private void OnDragEnded(DragEndedEvent _)
+        {
+            _isDragActive = false;
+            ShowNormalSprite();
+            SetHighlightVisuals(false);
+        }
 
         public void UpdateUI(CatUIData data)
         {
@@ -33,15 +96,77 @@ namespace cats.UI
             UpdateStatText(_moodText, data.Mood);
             UpdateStatText(_healthText, data.Health);
 
-            UpdateCatSprite(data.Mood);
+            if (!_useTemporarySprite)
+            {
+                UpdateCatSpriteByMood(data.Mood);
+            }
         }
 
-        private void UpdateStatText(TMP_Text text, float value)
+        public bool ContainsScreenPoint(Vector2 screenPoint, Camera cam)
         {
-            text.text = $"{value:F0}%";
+            return RectTransformUtility.RectangleContainsScreenPoint(_rect, screenPoint, cam);
         }
 
-        private void UpdateCatSprite(float mood)
+        public void ReceiveDrop(FoodItem food)
+        {
+            if (_catController == null) return;
+            _catController.FeedWithItem(food);
+            _feedback?.Play(food);
+            ShowNormalSprite();
+            SetHighlightVisuals(false);
+        }
+
+        public void SetHighlight(bool active)
+        {
+            SetHighlightVisuals(active);
+
+            if (_isDragActive)
+            {
+                if (active)
+                    ShowHoverSprite();
+                else
+                    ShowNormalSprite();
+            }
+        }
+
+        private void SetHighlightVisuals(bool active)
+        {
+            if (_highlightOverlay != null) 
+                _highlightOverlay.SetActive(active);
+
+        }
+
+        private void ShowHoverSprite()
+        {
+            if (_catSpriteImage == null || _dragHoverSprite == null) return;
+            
+            if (!_useTemporarySprite)
+            {
+                _originalSprite = _catSpriteImage.sprite;
+                _useTemporarySprite = true;
+            }
+            
+            _catSpriteImage.sprite = _dragHoverSprite;
+
+        }
+
+        private void ShowNormalSprite()
+        {
+            if (_catSpriteImage == null) return;
+            
+            if (_useTemporarySprite && _originalSprite != null)
+            {
+                _catSpriteImage.sprite = _originalSprite;
+                _useTemporarySprite = false;
+            }
+            else if (_normalSprite != null && !_useTemporarySprite)
+            {
+                _catSpriteImage.sprite = _normalSprite;
+            }
+
+        }
+
+        private void UpdateCatSpriteByMood(float mood)
         {
             if (_catSpriteImage == null) return;
             
@@ -51,6 +176,13 @@ namespace cats.UI
                 _catSpriteImage.sprite = _neutralCatSprite;
             else if (_sadCatSprite != null)
                 _catSpriteImage.sprite = _sadCatSprite;
+
+        }
+
+        private void UpdateStatText(TMP_Text text, float value)
+        {
+            if (text != null)
+                text.text = $"{value:F0}%";
         }
     }
 }

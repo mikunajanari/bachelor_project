@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace cats
@@ -11,9 +9,7 @@ namespace cats
         public void PlayClickSound()
         {
             if (_soundEffect != null)
-            {
-                SoundPlayerManager.Instance.PlaySound(_soundEffect);
-            }
+                AudioManager.Instance.PlaySfx(_soundEffect);
         }
     }
 }

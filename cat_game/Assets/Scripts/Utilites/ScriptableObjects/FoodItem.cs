@@ -2,10 +2,6 @@ using UnityEngine;
 
 namespace cats
 {
-    /// <summary>
-    /// ScriptableObject для опису одиниці корму.
-    /// Реалізує IShopItem — може продаватись у магазині за монети або реальні гроші.
-    /// </summary>
     [CreateAssetMenu(fileName = "NewFoodItem", menuName = "CoonGame/Items/Food Item")]
     public class FoodItem : ScriptableObject, IShopItem
     {

@@ -20,7 +20,7 @@ namespace cats
         public void Refresh()
         {
             if (_coinsText != null)
-                _coinsText.text = $"{CurrencyWallet.Instance.Coins} 🪙";
+                _coinsText.text = $"{CurrencyWallet.Instance.Coins}";
         }
     }
 }

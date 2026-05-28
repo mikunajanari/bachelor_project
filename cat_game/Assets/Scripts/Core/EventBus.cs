@@ -5,19 +5,33 @@ namespace cats
 {
     public static class EventBus
     {
-        private static readonly Dictionary<Type, Delegate> events = new();
+        private static readonly Dictionary<Type, Delegate> _events = new();
 
         public static void Subscribe<T>(Action<T> listener)
         {
-            if (events.TryGetValue(typeof(T), out var existing))
-                events[typeof(T)] = Delegate.Combine(existing, listener);
+            Type key = typeof(T);
+            if (_events.TryGetValue(key, out Delegate existing))
+                _events[key] = Delegate.Combine(existing, listener);
             else
-                events[typeof(T)] = listener;
+                _events[key] = listener;
+        }
+
+        public static void Unsubscribe<T>(Action<T> listener)
+        {
+            Type key = typeof(T);
+            if (_events.TryGetValue(key, out Delegate existing))
+            {
+                Delegate result = Delegate.Remove(existing, listener);
+                if (result == null)
+                    _events.Remove(key);
+                else
+                    _events[key] = result;
+            }
         }
 
         public static void Publish<T>(T eventData)
         {
-            if (events.TryGetValue(typeof(T), out var action))
+            if (_events.TryGetValue(typeof(T), out Delegate action))
                 ((Action<T>)action)?.Invoke(eventData);
         }
     }

@@ -7,5 +7,7 @@ namespace cats
     {
         public IShopItem Item;
         public bool      PaidWithCoins; // true = монети, false = реальні гроші
+        public FoodItem FoodItem;
+        public int Amount;
     }
 }
