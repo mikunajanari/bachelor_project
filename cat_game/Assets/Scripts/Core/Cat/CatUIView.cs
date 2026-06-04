@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 namespace cats.UI
 {
+    /// <summary>
+    /// Displays the current cat state and handles visual feedback
+    /// during user interaction.
+    /// </summary>
     public class CatUIView : MonoBehaviour, ICatUIView
     {
         [Header("Stat Bars")]
@@ -43,8 +47,9 @@ namespace cats.UI
             if (_catSpriteImage != null)
                 _normalSprite = _catSpriteImage.sprite;
             
-            // Настраиваем зону для дропа
+            // Enables the cat area to receive drag-and-drop interactions.
             Image zoneImage = GetComponent<Image>();
+
             if (zoneImage != null && zoneImage != _catSpriteImage)
             {
                 zoneImage.color = Color.clear;
@@ -170,7 +175,7 @@ namespace cats.UI
         {
             if (_catSpriteImage == null) return;
             
-            if (mood >= 70f && _happyCatSprite != null)
+            if (mood >= 60f && _happyCatSprite != null)
                 _catSpriteImage.sprite = _happyCatSprite;
             else if (mood >= 30f && _neutralCatSprite != null)
                 _catSpriteImage.sprite = _neutralCatSprite;

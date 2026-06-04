@@ -1,0 +1,5 @@
+D:/Desktop/bachelor_project/bachelor_project/cat_game/.utmp/RelWithDebInfo/6d4w1527/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Desktop/bachelor_project/bachelor_project/cat_game/.utmp/RelWithDebInfo/6d4w1527/arm64-v8a/CMakeFiles/rebuild_cache.dir
+D:/Desktop/bachelor_project/bachelor_project/cat_game/.utmp/RelWithDebInfo/6d4w1527/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+D:/Desktop/bachelor_project/bachelor_project/cat_game/.utmp/RelWithDebInfo/6d4w1527/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+D:/Desktop/bachelor_project/bachelor_project/cat_game/.utmp/RelWithDebInfo/6d4w1527/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir

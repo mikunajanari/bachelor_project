@@ -3,11 +3,16 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Система настрою.
-    /// При годуванні використовує MoodGain з FoodItem (тип * клас якості).
+    /// Manages mood changes based on feeding, healing,
+    /// and the overall condition of the cat.
     /// </summary>
     public class MoodSystem
     {
+        private const float BaseMoodLoss = 2f;
+        private const float CriticalMoodLoss = 4f;
+        private const float LowHungerThreshold = 45f;
+        private const float LowHealthThreshold = 75f;
+
         public MoodSystem()
         {
             EventBus.Subscribe<CatHealEvent>(OnCatHeal);
@@ -17,18 +22,9 @@ namespace cats
 
         private void OnCatFed(CatFedEvent e)
         {
-            if (e.FoodItem != null)
-            {
-                // Зміна Настрою: Настрій + Тип корму * Клас якості
-                // Округлюємо згідно ТЗ
-                float moodDelta = Mathf.Round(e.FoodItem.MoodGain);
-                e.Cat.ChangeMood(moodDelta);
-            }
-            else
-            {
-                // Fallback
-                e.Cat.ChangeMood(5f);
-            }
+            if (e.FoodItem == null) return;
+            float moodDelta = Mathf.Round(e.FoodItem.MoodGain);
+            e.Cat.ChangeMood(moodDelta);
         }
 
         private void OnCatHeal(CatHealEvent e)
@@ -38,14 +34,13 @@ namespace cats
 
         private void OnTick(TickEvent e)
         {
-            // Настрій знижується на 2 за годину → 2/3600 за секунду
-            e.Cat.ChangeMood(-2f / 3600f * e.DeltaTime);
+            // Test mode: mood decreases by 2 every 30 seconds
+            // In release: -2f / 3600f (2 units per hour)
+            e.Cat.ChangeMood(-BaseMoodLoss / 30f * e.DeltaTime);
 
-            // Додаткове зниження при поганій ситості або здоров'ї
-            if (e.Cat.Hunger < 45f || e.Cat.Health <= 75f)
-                e.Cat.ChangeMood(-3f * e.DeltaTime);
-
-            // Ожиріння прискорює погіршення здоров'я — обробляється в HealthSystem
+            // Poor physical condition negatively affects emotional well-being.
+            if (e.Cat.Hunger < LowHungerThreshold || e.Cat.Health < LowHealthThreshold)
+                e.Cat.ChangeMood(-CriticalMoodLoss / 30f * e.DeltaTime);
         }
     }
 }

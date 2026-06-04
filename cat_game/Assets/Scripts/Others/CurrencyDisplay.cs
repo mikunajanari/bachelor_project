@@ -3,10 +3,6 @@ using UnityEngine;
 
 namespace cats
 {
-    /// <summary>
-    /// Відображає поточний баланс монет гравця.
-    /// Оновлюється при отриманні ItemPurchasedEvent.
-    /// </summary>
     public class CurrencyDisplay : MonoBehaviour
     {
         [SerializeField] private TMP_Text _coinsText;

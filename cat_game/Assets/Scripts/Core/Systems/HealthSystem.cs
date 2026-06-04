@@ -3,12 +3,20 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Система здоров'я.
-    /// Враховує: хіл, ожиріння (прискорене зниження здоров'я), тиковий штраф.
-    /// FeedingQuality застосовується окремо через PeriodicHealthCheck.
+    /// Manages health changes caused by healing actions,
+    /// poor pet care, and weight-related conditions.
     /// </summary>
     public class HealthSystem
     {
+        // Base penalty for low satiety or mood
+        // Test mode: health decreases by 1 every 30 seconds
+        // In release: -1f / 3600f (-1 per hour)
+        private const float HealthPenalty = 1f / 30f;
+        private const float OverweightPenalty = 1f / 30f;
+        // Test mode: health decreases by 2 every 30 seconds
+        // In release: -2f / 3600f (-2 per hour)
+        private const float ObesityPenalty = 2f / 30f;
+
         public HealthSystem()
         {
             EventBus.Subscribe<CatHealEvent>(OnCatHeal);
@@ -24,15 +32,14 @@ namespace cats
         {
             var cat = e.Cat;
 
-            // Базовий штраф при низькій ситості або настрої
             if (cat.Hunger <= 45f || cat.Mood <= 35f)
-                cat.ChangeHealth(-4f * e.DeltaTime);
+                cat.ChangeHealth(-HealthPenalty * e.DeltaTime);
 
-            // При ожирінні здоров'я зменшується швидше
+            
             if (cat.IsObese)
-                cat.ChangeHealth(-6f * e.DeltaTime);
+                cat.ChangeHealth(-ObesityPenalty * e.DeltaTime);
             else if (cat.IsOverweight)
-                cat.ChangeHealth(-2f * e.DeltaTime);
+                cat.ChangeHealth(-OverweightPenalty * e.DeltaTime);
         }
     }
 }

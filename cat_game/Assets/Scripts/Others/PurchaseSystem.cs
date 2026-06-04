@@ -2,9 +2,6 @@ using UnityEngine;
 
 namespace cats
 {
-    /// <summary>
-    /// Система покупок. Перевіряє баланс, знімає монети, додає предмет до інвентаря.
-    /// </summary>
     public class PurchaseSystem : MonoBehaviour
     {
         public static PurchaseSystem Instance { get; private set; }
@@ -15,9 +12,6 @@ namespace cats
             Instance = this;
         }
 
-        /// <summary>
-        /// Купити корм за монети. Повертає true якщо успішно.
-        /// </summary>
         public bool BuyFoodWithCoins(FoodItem food, int quantity = 1)
         {
             if (!food.CanBuyWithCoins)
@@ -45,15 +39,11 @@ namespace cats
             return true;
         }
 
-        /// <summary>
-        /// Купити будь-який IShopItem за монети (загальний метод).
-        /// </summary>
         public bool BuyItemWithCoins(IShopItem item)
         {
             if (!item.CanBuyWithCoins) return false;
             if (!CurrencyWallet.Instance.TrySpend(item.CoinPrice)) return false;
 
-            // Якщо це корм — додаємо до інвентаря
             if (item is FoodItem food)
                 Inventory.Instance.AddFood(food);
 

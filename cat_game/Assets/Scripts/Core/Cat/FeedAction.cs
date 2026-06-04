@@ -3,17 +3,20 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Дія годування кота конкретним кормом з інвентаря.
-    /// Якщо корм є в інвентарі — витрачає порцію і публікує CatFedEvent.
+    /// Encapsulates the feeding process and ensures that inventory
+    /// consumption and gameplay updates remain synchronized.
     /// </summary>
     public class FeedAction
     {
-        /// <summary>Погодувати кота конкретним кормом з інвентаря.</summary>
+        /// <summary>
+        /// Feeds the cat using an item from the inventory and notifies
+        /// all systems that depend on feeding events.
+        /// </summary>
         public bool Execute(Cat cat, FoodItem food)
         {
             if (!Inventory.Instance.HasFood(food))
             {
-                Debug.Log($"[FeedAction] Нема корму '{food.DisplayName}' в інвентарі.");
+                Debug.Log($"[FeedAction] Food '{food.DisplayName}' is not available in inventory.");
                 return false;
             }
 
@@ -23,21 +26,10 @@ namespace cats
             {
                 Cat      = cat,
                 FoodItem = food,
-                FoodValue = food.SatietyGain // для сумісності з legacy-підписниками
+                FoodValue = food.SatietyGain
             });
 
             return true;
-        }
-
-        /// <summary>Legacy: годування без конкретного корму (для тестів / клавіша F).</summary>
-        public void Execute(Cat cat)
-        {
-            EventBus.Publish(new CatFedEvent
-            {
-                Cat       = cat,
-                FoodItem  = null,
-                FoodValue = 20f
-            });
         }
     }
 }

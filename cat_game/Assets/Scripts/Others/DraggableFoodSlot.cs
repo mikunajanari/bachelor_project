@@ -6,6 +6,10 @@ using cats.UI;
 
 namespace cats
 {
+    /// <summary>
+    /// Handles drag-and-drop interactions for food items,
+    /// allowing the player to feed the cat directly from the inventory.
+    /// </summary>
     public class DraggableFoodSlot : MonoBehaviour,
         IPointerDownHandler,
         IBeginDragHandler,
@@ -23,6 +27,8 @@ namespace cats
 
         public bool IsEmpty => _food == null;
 
+        private const float IconScale = 0.7f;
+        
         private void Awake()
         {
             _canvas = GetComponentInParent<Canvas>();
@@ -39,8 +45,7 @@ namespace cats
                 iconRect.offsetMin = new Vector2(padding, padding);
                 iconRect.offsetMax = new Vector2(-padding, -padding);
 
-                // Масштаб 0.7 по всем осям
-                iconRect.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+                iconRect.localScale = new Vector3(IconScale, IconScale, IconScale);
 
                 _fitter = _iconImage.GetComponent<AspectRatioFitter>();
                 if (_fitter == null)
@@ -50,6 +55,10 @@ namespace cats
             }
         }
 
+        /// <summary>
+        /// Configures the slot to display a specific food item
+        /// and its available quantity.
+        /// </summary>
         public void Setup(FoodItem food, int count)
         {
             _food = food;
@@ -60,7 +69,6 @@ namespace cats
                 _iconImage.enabled = food.Icon != null;
                 _iconImage.color = Color.white;
 
-                // Обновляем пропорции под конкретный спрайт
                 if (_fitter != null && food.Icon != null)
                 {
                     Rect r = food.Icon.rect;
@@ -78,6 +86,7 @@ namespace cats
                 _emptyOverlay.SetActive(false);
         }
 
+        /// Resets the slot when no food item is available.
         public void SetEmpty()
         {
             _food = null;
@@ -89,7 +98,7 @@ namespace cats
             }
 
             if (_fitter != null)
-                _fitter.aspectRatio = 1f; // сбрасываем на квадрат
+                _fitter.aspectRatio = 1f;
 
             if (_countText != null)
                 _countText.enabled = false;
@@ -105,7 +114,7 @@ namespace cats
             if (_food == null) return;
             if (DragHandler.Instance == null)
             {
-                Debug.LogError("[DraggableFoodSlot] DragHandler не найден на сцене!");
+                Debug.LogError("[DraggableFoodSlot] DragHandler is not found on the scene!");
                 return;
             }
             DragHandler.Instance.BeginDrag(_food, this, _food.Icon);

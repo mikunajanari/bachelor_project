@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace cats
 {
+    /// <summary>
+    /// Centralized storage of all food items owned by the player.
+    /// </summary>
     public class Inventory
     {
         public static Inventory Instance { get; } = new Inventory();
@@ -17,7 +20,7 @@ namespace cats
             if (!_foodStock.ContainsKey(key))
                 _foodStock[key] = 0;
             _foodStock[key] += amount;
-            Debug.Log($"[Inventory] +{amount} {food.DisplayName} (всього: {_foodStock[key]})");
+            Debug.Log($"[Inventory] +{amount} {food.DisplayName} (In all: {_foodStock[key]})");
         }
 
         public bool HasFood(FoodItem food) =>

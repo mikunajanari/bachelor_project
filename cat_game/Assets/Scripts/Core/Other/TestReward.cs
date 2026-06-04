@@ -6,7 +6,7 @@ namespace cats
     {
         public void Start()
         {
-            CurrencyWallet.Instance.Add(50);
+            CurrencyWallet.Instance.Add(100);
         }
     }
 }

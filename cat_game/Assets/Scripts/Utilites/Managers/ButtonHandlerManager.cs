@@ -25,9 +25,6 @@ namespace cats
 
         private void RegisterHandlers()
         {
-            // Register(new MenuButtonHandler());
-            // Register(new NoButtonHandler());
-            // Register(new YesButtonHandler());
         }
 
         public void Register(IButtonHandler buttonHandler)

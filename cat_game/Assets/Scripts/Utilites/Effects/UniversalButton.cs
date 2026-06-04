@@ -59,9 +59,6 @@ namespace cats
                     break;
 
                 case ButtonActionType.CustomAction:
-                    // At This can add a custom event call
-                    // Or get a component with IButtonAction interface
-                    // About Custom actions i added at document
                     GetComponent<IButtonAction>()?.ExecuteAction();
                     break;
 

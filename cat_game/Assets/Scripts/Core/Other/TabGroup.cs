@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,39 +6,42 @@ namespace cats
 {
     public class TabGroup : MonoBehaviour
     {
-        public static TabGroup Instance { get; private set; }
         
         [SerializeField] private List<GameObject> _tabPanels;
         [SerializeField] private List<Button> _tabButtons;
         private List<ITabHandler> _tabHandlers = new List<ITabHandler>();
 
-        private void Awake()
+        private void Start()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            
-            Instance = this;
             InitializeTabs();
-            //awdawd
         }
 
         private void InitializeTabs()
         {
+            if (_tabButtons == null || _tabPanels == null)
+            {
+                Debug.LogError($"[TabGroup] Lists not assigned in Inspector! ({gameObject.name})");
+                return;
+            }
+            
+            if (_tabButtons.Count != _tabPanels.Count)
+            {
+                Debug.LogError($"[TabGroup] TabButtons ({_tabButtons.Count}) != TabPanels ({_tabPanels.Count})");
+                return;
+            }
+            
             for (int i = 0; i < _tabButtons.Count; i++)
             {
                 var button = _tabButtons[i];
                 var panel = _tabPanels[i];
-                
-                string buttonId = $"TabButton_{i}";
+                string buttonId = $"TabButton_{GetInstanceID()}_{i}";
                 var handler = new TabButtonHandler(buttonId, panel, this, button);
-                
+
                 ButtonHandlerManager.Instance.Register(handler);
                 _tabHandlers.Add(handler);
-                
-                var uiButton = button.GetComponent<UIButton>() ?? button.gameObject.AddComponent<UIButton>();
+
+                var uiButton = button.GetComponent<UIButton>()
+                    ?? button.gameObject.AddComponent<UIButton>();
                 uiButton.SetButtonId(buttonId);
 
                 if (i == 0) handler.ActivateTab();
@@ -51,9 +53,9 @@ namespace cats
         {
             foreach (var handler in _tabHandlers)
             {
-                if (handler == selectedHandler) 
+                if (handler == selectedHandler)
                     handler.ActivateTab();
-                else 
+                else
                     handler.DisactivateTab();
             }
         }

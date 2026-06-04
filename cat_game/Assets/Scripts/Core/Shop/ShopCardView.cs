@@ -15,7 +15,7 @@ namespace cats
         {
             if (_foodItem == null) return;
             if (_foodName != null)    _foodName.text = _foodItem.DisplayName;
-            if (_description != null) _description.text = $"Опис Товару: {_foodItem.Description}"; // ✅
+            if (_description != null) _description.text = $"{_foodItem.Description}";
             
             foreach (var btn in _buyButtons)
                 btn.SetFood(_foodItem);

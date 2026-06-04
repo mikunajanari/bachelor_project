@@ -3,10 +3,10 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Загальний ScriptableObject для предметів магазину (не корм).
-    /// Для корму використовуй FoodItem.
+    /// Represents a generic shop item that can be purchased
+    /// and displayed in the in-game store.
     /// </summary>
-    [CreateAssetMenu(fileName = "NewShopItem", menuName = "CoonGame/Items/Shop Item")]
+    [CreateAssetMenu(fileName = "NewShopItem", menuName = "cats/Items/Shop Item")]
     public class ShopItemData : ScriptableObject, IShopItem
     {
         [Header("Shop")]

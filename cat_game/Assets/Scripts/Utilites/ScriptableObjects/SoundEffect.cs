@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace cats
 {
-    [CreateAssetMenu(fileName = "NewSoundEffect", menuName = "CoonGame/Audio/Sound Effect")]
+    [CreateAssetMenu(fileName = "NewSoundEffect", menuName = "cats/Audio/Sound Effect")]
     public class SoundEffect : ScriptableObject
     {
         [SerializeField] private AudioClip _clip;

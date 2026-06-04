@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace cats.UI
 {
+    /// <summary>
+    /// Connects the cat model with the user interface and keeps displayed
+    /// data synchronized with gameplay events.
+    /// </summary>
     public class CatUIPresenter : MonoBehaviour
     {
         [SerializeField] private MonoBehaviour _viewComponent; 
@@ -11,6 +15,7 @@ namespace cats.UI
 
         private void Start()
         {
+            // Ensures the assigned component can receive UI updates.
             if (_viewComponent is ICatUIView view)
                 _view = view;
             else
@@ -18,6 +23,7 @@ namespace cats.UI
 
             _uiData = new CatUIData();
             
+            // Refreshes the interface whenever the cat state changes.
             EventBus.Subscribe<TickEvent>(OnStatsChanged);
             EventBus.Subscribe<CatFedEvent>(OnStatsChanged);
         }
@@ -29,6 +35,9 @@ namespace cats.UI
                 UpdateUI(cat);
         }
 
+        /// <summary>
+        /// Extracts the cat instance from the event data.
+        /// </summary>
         private Cat GetCatFromEvent<T>(T eventData)
         {
             if (eventData is TickEvent tick)
@@ -38,6 +47,9 @@ namespace cats.UI
             return null;
         }
 
+        /// <summary>
+        /// Converts model data into a UI-friendly format and forwards it to the view.
+        /// </summary>
         private void UpdateUI(Cat cat)
         {
             _uiData.UpdateStats(cat);

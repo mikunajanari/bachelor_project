@@ -1,35 +1,32 @@
 namespace cats
 {
     /// <summary>
-    /// Клас якості корму.
-    /// Coefficient — множник для розрахунку зміни Ситості / Настрою.
-    /// FeedingQualityDelta — вплив на FeedingQuality при кожному годуванні.
-    /// OvereatingImpact — базовий вплив на OvereatingScore при переїданні.
+    /// Defines food quality categories used to influence
+    /// feeding outcomes and long-term pet development.
     /// </summary>
     public enum QualityClass
     {
-        Economy  = 0,   // Економ
-        Premium  = 1,   // Преміум
-        Holistic = 2    // Холістик
+        Economy  = 0,
+        Premium  = 1,
+        Holistic = 2
     }
 
     public static class QualityClassExtensions
     {
-        /// <summary>Коефіцієнт якості для розрахунку Ситості/Настрою.</summary>
+        /// <summary>Quality coefficient for calculating Satiety/Mood changes.</summary>
         public static float GetCoefficient(this QualityClass quality)
         {
             return quality switch
             {
-                QualityClass.Economy  => 1.0f,
-                QualityClass.Premium  => 1.1f,
+                QualityClass.Economy  => 0.7f,
+                QualityClass.Premium  => 1.0f,
                 QualityClass.Holistic => 1.2f,
                 _                    => 1.0f
             };
         }
 
         /// <summary>
-        /// Зміна FeedingQuality при кожному годуванні:
-        ///   Економ  = -1, Преміум = 0, Холістик = +1
+        /// Tracks the cumulative impact of feeding choices on long-term health.
         /// </summary>
         public static int GetFeedingQualityDelta(this QualityClass quality)
         {
@@ -43,8 +40,7 @@ namespace cats
         }
 
         /// <summary>
-        /// Базовий вплив на OvereatingScore при переїданні:
-        ///   Економ = +3, Преміум = +2, Холістик = +1
+        /// Determines how strongly overeating contributes to weight-related penalties.
         /// </summary>
         public static int GetOvereatingImpact(this QualityClass quality)
         {
@@ -57,7 +53,7 @@ namespace cats
             };
         }
 
-        /// <summary>Назва для UI.</summary>
+        /// <summary>Display name for UI.</summary>
         public static string GetDisplayName(this QualityClass quality)
         {
             return quality switch

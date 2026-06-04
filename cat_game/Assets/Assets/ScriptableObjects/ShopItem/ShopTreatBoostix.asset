@@ -9,15 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c20194423d084e4c9e0454d6d5528eb, type: 3}
-  m_Name: NewFoodItem
+  m_Script: {fileID: 11500000, guid: 0d9fdfe059538954caca1fb24f90c0ed, type: 3}
+  m_Name: ShopTreatBoostix
   m_EditorClassIdentifier: 
-  _id: 
-  _displayName: 
-  _coinPrice: 3
-  _canBuyWithCoins: 1
-  _canBuyWithMoney: 0
-  _foodType: 20
-  _quality: 0
-  _icon: {fileID: 0}
-  _description: 
+  _foodItem: {fileID: 11400000, guid: 75137450a5abdde4e9b5dd079f09f20d, type: 2}
+  _buyOptions:
+  - _amount: 1
+    _price: 0

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace cats
 {
+    /// <summary>
+    /// Provides a lightweight event-driven communication mechanism
+    /// that reduces direct dependencies between game systems.
+    /// </summary>
     public static class EventBus
     {
         private static readonly Dictionary<Type, Delegate> _events = new();

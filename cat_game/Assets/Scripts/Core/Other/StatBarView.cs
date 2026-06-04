@@ -32,8 +32,8 @@ namespace cats.UI
 
         private Sprite GetSpriteByValue(float value, SpriteLevels sprites)
         {
-            if (value >= 70f) return sprites.high;
-            if (value >= 40f) return sprites.mid;
+            if (value >= 60f) return sprites.high;
+            if (value >= 30f) return sprites.mid;
             return sprites.low;
         }
     }

@@ -3,23 +3,21 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Система тижневої перевірки якості годування.
-    /// Раз на <PeriodSeconds> секунд ігрового часу застосовує FeedingQuality до Health
-    /// та обнуляє показник.
+    /// Applies long-term health effects based on accumulated
+    /// feeding quality over a configurable evaluation period.
     /// </summary>
     public class FeedingQualitySystem
     {
-        /// <summary>
-        /// Тривалість одного «тижня» в ігрових секундах.
-        /// За замовчуванням 604800 (реальний тиждень).
-        /// Для тестів зменшуй до 60–300.
-        /// </summary>
-        public float PeriodSeconds { get; set; } = 604800f;
+        /// Defaults to 604800 (one real week).
+        /// For testing, reduce to 60–300.
+        private const float WeekInSeconds = 604800f;
+
+        public float PeriodSeconds { get; set; } = WeekInSeconds;
 
         private float _timer;
         private Cat _cat;
 
-        public FeedingQualitySystem(Cat cat, float periodSeconds = 604800f)
+        public FeedingQualitySystem(Cat cat, float periodSeconds = WeekInSeconds)
         {
             _cat = cat;
             PeriodSeconds = periodSeconds;
@@ -30,14 +28,14 @@ namespace cats
 
         private void OnTick(TickEvent e)
         {
-            if (e.Cat != _cat) return; // якщо кілька котів
+            if (e.Cat != _cat) return;
 
             _timer += e.DeltaTime;
             if (_timer >= PeriodSeconds)
             {
                 _timer -= PeriodSeconds;
                 _cat.ApplyAndResetFeedingQuality();
-                Debug.Log($"[FeedingQualitySystem] Тижнева перевірка: Health={_cat.Health:F1}");
+                Debug.Log($"[FeedingQualitySystem] Weekly check: Health={_cat.Health:F1}");
             }
         }
     }

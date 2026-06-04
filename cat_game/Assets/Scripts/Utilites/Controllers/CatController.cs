@@ -3,15 +3,15 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Контролер кота. Ініціалізує всі системи та прив'язує дії.
+    /// Coordinates gameplay systems and serves as the entry point
+    /// for managing the virtual pet lifecycle.
     /// </summary>
     public class CatController : MonoBehaviour
     {
         [Header("Debug / Test")]
-        [Tooltip("FoodItem для тесту (клавіша F). Якщо null — legacy режим без Item.")]
         [SerializeField] private FoodItem _testFoodItem;
 
-        [Tooltip("Тривалість тижня в секундах для FeedingQualitySystem. 604800 = реальний тиждень.")]
+        [Tooltip("Duration of a week in seconds for FeedingQualitySystem. 604800 = real week.")]
         [SerializeField] private float _feedingQualityPeriod = 604800f;
 
         private Cat _cat;
@@ -23,7 +23,8 @@ namespace cats
         {
             _cat = new Cat(100f, 100f, 100f);
 
-            // Ініціалізуємо системи (підписуються на EventBus у конструкторі)
+            // Initializes all gameplay systems responsible for
+            // updating the cat's state over time.
             new HungerSystem();
             new MoodSystem();
             new HealthSystem();
@@ -32,7 +33,8 @@ namespace cats
             _feedAction = new FeedAction();
             _healAction = new HealAction();
 
-            // Перший тік для ініціалізації UI
+            // Forces the UI to display the initial state immediately
+            // after application startup.
             EventBus.Publish(new TickEvent { Cat = _cat, DeltaTime = 0f });
         }
 
@@ -41,7 +43,9 @@ namespace cats
             _healAction.Execute(_cat);
         }
 
-        /// <summary>Годування конкретним кормом з інвентаря (виклик з UI).</summary>
+        /// <summary>
+        /// Processes feeding requests initiated from the user interface.
+        /// </summary>
         public void FeedWithItem(FoodItem food)
         {
             _feedAction.Execute(_cat, food);
@@ -51,12 +55,12 @@ namespace cats
         {
             EventBus.Publish(new TickEvent { Cat = _cat, DeltaTime = Time.deltaTime });
 
-            // Тест: F — годування тестовим кормом або legacy
+            // Provides a shortcut for validating feeding mechanics
+            // during development and balancing.
             if (Input.GetKeyDown(KeyCode.F))
             {
                 if (_testFoodItem != null)
                 {
-                    // Для тесту додаємо корм в інвентар якщо його нема
                     if (!Inventory.Instance.HasFood(_testFoodItem))
                         Inventory.Instance.AddFood(_testFoodItem, 10);
 
@@ -64,7 +68,7 @@ namespace cats
                 }
                 else
                 {
-                    _feedAction.Execute(_cat);
+                    _feedAction.Execute(_cat, _testFoodItem);
                 }
             }
         }

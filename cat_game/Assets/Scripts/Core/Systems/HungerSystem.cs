@@ -3,12 +3,13 @@ using UnityEngine;
 namespace cats
 {
     /// <summary>
-    /// Система ситості.
-    /// Обробляє годування з урахуванням FoodItem (тип + клас якості) згідно ТЗ.
-    /// Також обробляє логіку переїдання через OvereatingChance.
+    /// Manages satiety changes over time and applies feeding effects,
+    /// including food quality and overeating consequences.
     /// </summary>
     public class HungerSystem
     {
+        private const float HungerDecayPerPeriod = 3f;
+
         public HungerSystem()
         {
             EventBus.Subscribe<CatFedEvent>(OnCatFed);
@@ -20,47 +21,42 @@ namespace cats
             var cat = e.Cat;
             var food = e.FoodItem;
 
-            // ── Якщо корм конкретний (через FoodItem) ─────────────
+            // Prevents unlimited feeding when hunger is already full,
+            // while still allowing overeating as a gameplay risk.
             if (food != null)
             {
-                // Якщо кіт вже ситий — перевіряємо OvereatingChance
                 if (cat.Hunger >= 100f)
                 {
                     if (Random.value < cat.OvereatingChance)
                     {
-                        // Кіт переїдає
                         cat.AddOvereatingScore(food.OvereatingImpact);
                         ApplyFoodStats(cat, food);
                     }
-                    // Інакше — кіт відмовляється від корму (RefuseFood)
                     return;
                 }
 
                 ApplyFoodStats(cat, food);
 
-                // Записуємо FeedingQuality
+                // Records long-term feeding quality for future health evaluation.
                 cat.ChangeFeedingQuality(food.Quality.GetFeedingQualityDelta());
             }
             else
             {
-                // ── Fallback: без FoodItem, просто FoodValue ───────
                 cat.ChangeHunger(e.FoodValue);
             }
         }
 
-        /// <summary>Застосовує зміни Ситості та Настрою від корму.</summary>
+        /// <summary>Applies changes to satiety and mood from food.</summary>
         private void ApplyFoodStats(Cat cat, FoodItem food)
         {
             cat.ChangeHunger(food.SatietyGain);
-            // Зміна настрою публікується окремо через MoodSystem,
-            // але ми кладемо значення у CatFedEvent через MoodGain.
-            // Щоб уникнути дублювання — MoodSystem сам читає FoodItem.
         }
 
         private void OnTick(TickEvent e)
         {
-            // Ситість знижується на 3 за годину → 3/3600 за секунду
-            e.Cat.ChangeHunger(-3f / 3f * e.DeltaTime);
+            // Test mode: satiety decreases by 3 every 30 seconds
+            // In release: -3f / 3600f (3 units per hour)
+            e.Cat.ChangeHunger(-HungerDecayPerPeriod / 30f * e.DeltaTime);
         }
     }
 }
