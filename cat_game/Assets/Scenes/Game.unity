@@ -18821,11 +18821,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 15
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 170, y: 170}
-  m_Spacing: {x: 50, y: 45}
+  m_Spacing: {x: 40, y: 45}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &965876728
@@ -18842,7 +18842,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slotPrefab: {fileID: 2317718243746883849, guid: 1bb28db93e1c94546bdb6a33d068d33f, type: 3}
   _gridContainer: {fileID: 965876725}
-  _totalSlots: 12
+  _totalSlots: 9
   _allFoodItems:
   - {fileID: 11400000, guid: 888f375bdde0a9349a4be2aaf1b3f8c7, type: 2}
   - {fileID: 11400000, guid: 7bc22f8951f455f44a90c4927cc95313, type: 2}

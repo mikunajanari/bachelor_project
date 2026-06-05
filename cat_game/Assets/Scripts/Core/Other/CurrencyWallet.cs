@@ -17,6 +17,11 @@ namespace cats
 
         private CurrencyWallet()
         {
+            Reload();
+        }
+
+        public void Reload()
+        {
             Coins = PlayerPrefs.GetInt(SaveKey, StartingCoins);
         }
 
@@ -27,7 +32,8 @@ namespace cats
             if (!CanAfford(amount) || amount <= 0) return false;
             Coins -= amount;
             Save();
-            
+            EventBus.Publish(new CurrencyChangedEvent { Coins = Coins });
+
             Debug.Log($"[CurrencyWallet] -{amount} coins. Remaining: {Coins}");
             return true;
         }
@@ -37,9 +43,14 @@ namespace cats
             if (amount <= 0) return;
             Coins += amount;
             Save();
+            EventBus.Publish(new CurrencyChangedEvent { Coins = Coins });
             Debug.Log($"[CurrencyWallet] +{amount} coins. Balance: {Coins}");
         }
 
-        private void Save() => PlayerPrefs.SetInt(SaveKey, Coins);
+        private void Save()
+        {
+            PlayerPrefs.SetInt(SaveKey, Coins);
+            PlayerPrefs.Save();
+        }
     }
 }
